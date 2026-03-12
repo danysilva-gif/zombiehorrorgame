@@ -50,46 +50,50 @@ export function createInitialState(levelId: number = 1, wavesRequired: number = 
   };
 }
 
-function generatePlatforms(): Platform[] {
-  const platforms: Platform[] = [];
+function seededRandom(seed: number) {
+  let s = seed;
+  return () => {
+    s = (s * 1103515245 + 12345) & 0x7fffffff;
+    return s / 0x7fffffff;
+  };
+}
 
-  // Continuous ground with small gaps
+function generatePlatforms(levelId: number): Platform[] {
+  const platforms: Platform[] = [];
+  const rng = seededRandom(levelId * 137 + 42);
+
+  // Ground with gaps that vary per level
   for (let x = 0; x < WORLD_WIDTH; x += 400) {
-    const gapChance = x > 400 && x < WORLD_WIDTH - 400 ? Math.random() : 1;
-    if (gapChance > 0.15) {
-      platforms.push({
-        x,
-        y: 440,
-        width: 400,
-        height: 60,
-        type: 'ground',
-      });
+    const gapChance = x > 400 && x < WORLD_WIDTH - 400 ? rng() : 1;
+    const gapThreshold = 0.1 + (levelId * 0.01);
+    if (gapChance > gapThreshold) {
+      platforms.push({ x, y: 440, width: 400, height: 60, type: 'ground' });
     }
   }
 
-  // Floating platforms - more of them, better spacing
-  const floatingPositions = [
-    { x: 200, y: 350 }, { x: 400, y: 310 }, { x: 650, y: 340 },
-    { x: 850, y: 290 }, { x: 1050, y: 330 }, { x: 1250, y: 270 },
-    { x: 1450, y: 350 }, { x: 1650, y: 300 }, { x: 1850, y: 260 },
-    { x: 2050, y: 340 }, { x: 2250, y: 290 }, { x: 2450, y: 320 },
-    { x: 2650, y: 270 }, { x: 2850, y: 350 }, { x: 3050, y: 300 },
-  ];
-
-  for (const pos of floatingPositions) {
+  // Floating platforms - positions vary per level via seed
+  const count = 12 + Math.min(levelId, 8);
+  for (let i = 0; i < count; i++) {
     platforms.push({
-      x: pos.x,
-      y: pos.y,
-      width: 100 + Math.random() * 60,
+      x: 150 + rng() * (WORLD_WIDTH - 300),
+      y: 240 + rng() * 140,
+      width: 80 + rng() * 80,
       height: 20,
       type: 'floating',
     });
   }
 
-  // Brick walls
-  platforms.push({ x: 600, y: 360, width: 32, height: 80, type: 'brick' });
-  platforms.push({ x: 1400, y: 360, width: 32, height: 80, type: 'brick' });
-  platforms.push({ x: 2300, y: 360, width: 32, height: 80, type: 'brick' });
+  // Brick walls - more in later levels
+  const wallCount = 2 + Math.floor(levelId / 4);
+  for (let i = 0; i < wallCount; i++) {
+    platforms.push({
+      x: 400 + rng() * (WORLD_WIDTH - 800),
+      y: 360,
+      width: 32,
+      height: 80,
+      type: 'brick',
+    });
+  }
 
   return platforms;
 }
