@@ -67,10 +67,13 @@ export interface GameState {
   particles: Particle[];
   score: number;
   wave: number;
+  maxWaves: number;
   gameOver: boolean;
+  gameWon: boolean;
   gameStarted: boolean;
   cameraX: number;
   spawnTimer: number;
   zombiesKilled: number;
   zombiesToSpawn: number;
+  levelId: number;
 }

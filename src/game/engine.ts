@@ -310,9 +310,14 @@ export function update(state: GameState, keys: Set<string>, dt: number): GameSta
 
   // Check wave complete
   if (newState.zombiesToSpawn <= 0 && newState.zombies.filter(z => z.active).length === 0) {
-    newState.wave++;
-    newState.zombiesToSpawn = 3 + newState.wave * 2;
-    newState.score += newState.wave * 100;
+    if (newState.wave >= newState.maxWaves) {
+      newState.gameWon = true;
+      newState.gameOver = true;
+    } else {
+      newState.wave++;
+      newState.zombiesToSpawn = 3 + newState.wave * 2;
+      newState.score += newState.wave * 100;
+    }
   }
 
   // Update zombies
