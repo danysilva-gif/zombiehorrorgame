@@ -12,8 +12,8 @@ const WORLD_WIDTH = 3200;
 const COYOTE_TIME = 6;
 const JUMP_BUFFER = 6;
 
-export function createInitialState(): GameState {
-  const platforms = generatePlatforms();
+export function createInitialState(levelId: number = 1, wavesRequired: number = 3): GameState {
+  const platforms = generatePlatforms(levelId);
   return {
     player: {
       x: 100,
@@ -38,12 +38,15 @@ export function createInitialState(): GameState {
     particles: [],
     score: 0,
     wave: 1,
+    maxWaves: wavesRequired,
     gameOver: false,
+    gameWon: false,
     gameStarted: false,
     cameraX: 0,
     spawnTimer: 0,
     zombiesKilled: 0,
     zombiesToSpawn: 3,
+    levelId,
   };
 }
 
