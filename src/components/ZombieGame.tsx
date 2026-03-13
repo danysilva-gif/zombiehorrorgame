@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
-import { createInitialState, update } from '@/game/engine';
+import { createInitialState, update, resetTimers } from '@/game/engine';
 import { render } from '@/game/renderer';
 import { GameState } from '@/game/types';
 import { LevelConfig } from '@/game/levels';

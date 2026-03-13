@@ -197,6 +197,11 @@ function resolvePlatformCollisions(entity: { x: number; y: number; width: number
 let coyoteTimer = 0;
 let jumpBufferTimer = 0;
 
+export function resetTimers() {
+  coyoteTimer = 0;
+  jumpBufferTimer = 0;
+}
+
 export function update(state: GameState, keys: Set<string>, dt: number): GameState {
   if (state.gameOver || !state.gameStarted) return state;
 
