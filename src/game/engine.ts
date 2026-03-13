@@ -398,6 +398,11 @@ export function update(state: GameState, keys: Set<string>, dt: number): GameSta
     life: p.life - 1,
   }));
 
+  // Cap particles for performance
+  if (newParticles.length > 100) {
+    newParticles = newParticles.slice(-100);
+  }
+
   newState.particles = newParticles;
   newState.player = player;
 
