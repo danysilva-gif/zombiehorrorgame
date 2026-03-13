@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
-import { createInitialState, update } from '@/game/engine';
+import { createInitialState, update, resetTimers } from '@/game/engine';
 import { render } from '@/game/renderer';
 import { GameState } from '@/game/types';
 import { LevelConfig } from '@/game/levels';
@@ -44,6 +44,8 @@ export default function ZombieGame() {
   }, [updateScale]);
 
   const startLevel = useCallback((level: LevelConfig) => {
+    resetTimers();
+    keysRef.current.clear();
     const state = createInitialState(level.id, level.wavesRequired);
     state.gameStarted = true;
     gameStateRef.current = state;

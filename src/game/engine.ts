@@ -197,6 +197,11 @@ function resolvePlatformCollisions(entity: { x: number; y: number; width: number
 let coyoteTimer = 0;
 let jumpBufferTimer = 0;
 
+export function resetTimers() {
+  coyoteTimer = 0;
+  jumpBufferTimer = 0;
+}
+
 export function update(state: GameState, keys: Set<string>, dt: number): GameState {
   if (state.gameOver || !state.gameStarted) return state;
 
@@ -392,6 +397,11 @@ export function update(state: GameState, keys: Set<string>, dt: number): GameSta
     velocityX: p.velocityX * 0.98,
     life: p.life - 1,
   }));
+
+  // Cap particles for performance
+  if (newParticles.length > 100) {
+    newParticles = newParticles.slice(-100);
+  }
 
   newState.particles = newParticles;
   newState.player = player;
