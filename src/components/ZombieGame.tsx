@@ -44,6 +44,8 @@ export default function ZombieGame() {
   }, [updateScale]);
 
   const startLevel = useCallback((level: LevelConfig) => {
+    resetTimers();
+    keysRef.current.clear();
     const state = createInitialState(level.id, level.wavesRequired);
     state.gameStarted = true;
     gameStateRef.current = state;
